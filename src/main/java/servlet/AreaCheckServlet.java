@@ -1,6 +1,14 @@
 package servlet;
 
 
+import exceptions.DataException;
+import exceptions.InvalidParameterValue;
+import model.containers.HitList;
+import model.containers.HitListImpl;
+import model.entites.Hit;
+import utils.fabrics.HitFabric;
+
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,112 +22,44 @@ import java.util.Iterator;
 @WebServlet(urlPatterns = {"/check","/check/*"})
 public class AreaCheckServlet extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/plain");
-        double xCoordinate;
+    @EJB
+    private HitFabric hitFabric;
 
-        double yCoordinate = Double.parseDouble(request.getParameter("Y"));
-        int rValue = Integer.parseInt(request.getParameter("R"));
-        boolean isHit = false;
-        try {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("text/plain");
+
+        double xCoordinate;
+        double yCoordinate;
+        double rValue;
+
+        try{
             xCoordinate = Double.parseDouble(request.getParameter("X"));
-            if (xCoordinate < -5 || xCoordinate > 3) {
-                throw new Exception();
-            }
-        }
-        catch (Exception e){
-            writeSessionResults(request.getSession(), response);
-            response.getWriter().print("Invalid Number;" + yCoordinate + ";" + rValue + ";Invalid");
-            response.getWriter().close();
+            yCoordinate = Double.parseDouble(request.getParameter("Y"));
+            rValue = Double.parseDouble(request.getParameter("R"));
+
+        }catch (NumberFormatException | NullPointerException exception){
+            request.setAttribute("error", exception.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request,response);
             return;
         }
-        response.setContentType("text/plain");
-        if ((xCoordinate >=0 && yCoordinate >= 0) && (yCoordinate <=  -xCoordinate/2 + (float)rValue /2)){
-            isHit = true;
+        try {
+            Hit hit = hitFabric.createHit(xCoordinate,yCoordinate,rValue);
+            saveHit(hit, request.getSession());
+            request.setAttribute("hit", hit);
+        } catch (InvalidParameterValue exception) {
+            request.setAttribute("error", exception.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request,response);
+            return;
         }
-        if ((xCoordinate <= 0 && yCoordinate <= 0) && (Math.pow(xCoordinate,2) + Math.pow(yCoordinate,2) <= Math.pow(rValue,2))) {
-            isHit = true;
-        }
-        if ((xCoordinate >= 0 && yCoordinate <=0) && (xCoordinate <= rValue && yCoordinate >= -rValue)) {
-            isHit = true;
-        }
-        writeSessionResults(request.getSession(), response);
-        response.getWriter().print(xCoordinate + ";" + yCoordinate + ";" + rValue + ";" + isHit);
-        response.getWriter().close();
-        saveResult(new Result(xCoordinate, yCoordinate, rValue, isHit), request.getSession());
+        System.out.print("Hit done");
+        request.getRequestDispatcher("/result.jsp").forward(request,response);
     }
 
-    static class Result{
-        private double x;
-        private double y;
-        private int r;
-        private boolean hit;
-
-        Result(double x, double y, int r, boolean hit) {
-            this.x = x;
-            this.y = y;
-            this.r = r;
-            this.hit = hit;
-        }
-
-        public Result(){}
-
-        public double getX() {
-            return x;
-        }
-
-        public void setX(double x) {
-            this.x = x;
-        }
-
-        public double getY() {
-            return y;
-        }
-
-        public void setY(double y) {
-            this.y = y;
-        }
-
-        public int getR() {
-            return r;
-        }
-
-        public void setR(int r) {
-            this.r = r;
-        }
-
-        public boolean isHit() {
-            return hit;
-        }
-
-        public void setHit(boolean hit) {
-            this.hit = hit;
-        }
-
-        @Override
-        public String toString() {
-            return x +
-                    ";" + y +
-                    ";" + r +
-                    ";" + hit;
-        }
-    }
-
-    private void writeSessionResults (HttpSession session, HttpServletResponse response){
-        ArrayList<Result> results = (ArrayList<Result>) session.getAttribute("Results");
-        if (results != null) results.forEach((k) -> {
-            try {
-                response.getWriter().print(k.toString() + "/");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private void saveResult(Result result, HttpSession session){
-        if (session.getAttribute("Results" ) == null) session.setAttribute("Results",new ArrayList<Result>());
-        ArrayList<Result> results = (ArrayList<Result>) session.getAttribute("Results");
-        if (results != null) results.add(result);
+    private void saveHit(Hit hit, HttpSession session){
+        if (session.getAttribute("Results" ) == null) session.setAttribute("Results",new HitListImpl());
+        HitList<Hit> results = (HitList<Hit>) session.getAttribute("Results");
+        if (results != null) results.add(hit);
         session.setAttribute("Results", results);
     }
 }

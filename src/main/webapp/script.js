@@ -3,8 +3,9 @@ function redrawCanvas() {
     let ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     let valueR = document.querySelector('input[name = "R"]:checked')
+    let r
     if (valueR !== null) {
-        let r = Number.parseInt(valueR.value)
+        r = Number.parseInt(valueR.value)
         ctx.fillStyle = '#EE00FFAA'
         ctx.strokeStyle = '#EE00FF'
         ctx.beginPath()
@@ -81,14 +82,9 @@ function redrawCanvas() {
         ctx.fillText("-R/2", 320, 190)
         ctx.fillText("X", 350, 190)
     }
-
-    if (valueR !== null){
-        for (let dot of dots){
-            if ("Invalid" === dot.hit){
-                ctx.fillStyle = '#0000FF'
-                ctx.fillRect((dot.x*24)+200, -(dot.y*24)+200, 3,3)
-            }
-            else if ("true" === dot.hit){
+    if (r !== undefined){
+        for (let dot of dots[r-1]){
+            if ("true" === dot.hit){
                 ctx.fillStyle = '#00FF00'
                 ctx.fillRect((dot.x*24)+200, -(dot.y*24)+200, 3,3)
             }
@@ -96,18 +92,44 @@ function redrawCanvas() {
                 ctx.fillStyle = '#FF0000'
                 ctx.fillRect((dot.x*24)+200, -(dot.y*24)+200, 3,3)
             }
-
         }
     }
+
 }
+
+let drawed = false
 
 document.onreadystatechange = function () {
     document.getElementById('graph').addEventListener('mousedown', makeDot)
     document.getElementById("checkR_1").parentElement.addEventListener('change',redrawCanvas)
     redrawCanvas()
+    if (!drawed){
+        for (let i = 0; i< 5; i++){
+            for(dot of dots[i]){
+                addRow(dot.x, dot.y,dot.r, dot.hit)
+            }
+        }
+
+        drawed = true;
+    }
+
 }
 
-let dots = []
+let dots = [[],[],[],[],[]]
+
+function loadDots(data){
+    if (data !== "")
+    for(dot of data.split("/")){
+        dots[Number.parseInt(dot.split(",")[2])-1].push(
+            Object.create({
+                x: Number.parseFloat(dot.split(",")[0]),
+                y: Number.parseFloat(dot.split(",")[1]),
+                r: Number.parseInt(dot.split(",")[2]),
+                hit: dot.split(",")[3]
+            })
+        )
+    }
+}
 
 function validate(){
     let errors = document.getElementsByClassName("Error")
@@ -189,36 +211,7 @@ function sendForm(x, y, r){
     let data;
     dots = []
     data = "X=" + x + "&Y=" + y + "&R=" + r + "&RequestType=dot"
-    $.ajax({
-        url: "http://localhost:7400/lab2/controller",
-        type: "GET",
-        data: data,
-        success: function (msg) {
-            let table = $('.data')
-            let i = 0;
-            for (i; i < table.length; i++){
-                table[i].remove()
-            }
-            let result = String(msg).split("/")
-            for (let strings of result){
-                let results = String(strings).split(";")
-                addRow(results[0], results[1], results[2], results[3])
-                dots.push({
-                    x: results[0],
-                    y: results[1],
-                    hit: results[3]
-                });
-                if(results[3] === "Invalid"){
-                    dots.push({
-                        x: x,
-                        y: y,
-                        hit: results[3]
-                    });
-                }
-            }
-            redrawCanvas()
-        }
-    })
+    location.assign("http://localhost:7400/lab2/controller?"+data)
 }
 
 function clearTable(){

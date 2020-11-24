@@ -1,4 +1,6 @@
-<%--
+<%@ page import="model.containers.HitListImpl" %>
+<%@ page import="model.containers.HitList" %>
+<%@ page import="model.entites.Hit" %><%--
   Created by IntelliJ IDEA.
   User: seeke
   Date: 10.11.2020
@@ -9,15 +11,26 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Popov D.M. Lab01 P3213</title>
+    <title>Popov D.M. Lab02 P3213</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="http://code.jquery.com/jquery-2.2.4.js" type="text/javascript"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/script.js"></script>
+    <%
+        if (request.getSession().getAttribute("Results") == null){
+            request.getSession().setAttribute("Results", new HitListImpl());
+        }
+        HitList<Hit> list =  (HitList<Hit>) request.getSession().getAttribute("Results");
+        StringBuilder builder = new StringBuilder();
+        list.getList().forEach((k) -> {
+            builder.append(k.toString()).append("/");
+        });
+        if (!"".equals(builder.toString())) builder.deleteCharAt(builder.lastIndexOf("/"));
+    %>
+    <script>loadDots("<%=builder.toString()%>")</script>
 </head>
 
 <body>
 <header>
-    ${ (!"dot".equals(pageContext.request.getParameter("RequestType")) ? pageContext.session.removeAttribute("Results") : "") }
     <table class="studInfo">
         <tr>
             <td>Popov Daniil Michailovich</td>
@@ -38,12 +51,13 @@
                 <table>
                     <tr>
                         <td>
-                            <form name="data" onsubmit="return false">
+                            <form name="data"  onsubmit="return false">
                                 <table class="contentTable">
                                     <tr>
                                         <td>
                                             Insert X:
                                             <input type="text" id="checkX" name="X" placeholder="Input X here...">
+                                            <input type="hidden" name="RequestType" value="dot">
                                         </td>
                                     </tr>
                                     <tr>
@@ -74,7 +88,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <input type ="submit" onclick="validate()">
+                                            <input type ="submit" onclick="validate()" value="Отправить">
                                             <input type="submit" id="clear" value="Очистить" onclick="clearTable()">
                                         </td>
                                     </tr>

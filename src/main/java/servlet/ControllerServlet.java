@@ -11,12 +11,16 @@ import java.io.IOException;
 public class ControllerServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if ("dot".equals(request.getParameter("RequestType"))){
-            servlet.AreaCheckServlet areaCheckServlet = new servlet.AreaCheckServlet();
-            areaCheckServlet.doGet(request,response);
+        System.out.print("eee");
+        if ("dot".equals(request.getParameter("RequestType"))) {
+            System.out.print("afa");
+            request.getRequestDispatcher("/check").forward(request, response);
         }
-        else {
-            request.getRequestDispatcher("index.jsp").forward(request,response);
-        }
+
+        else if ("clear".equals(request.getParameter("RequestType")))
+            request.getRequestDispatcher("/clear").forward(request,response);
+
+        else
+            request.getRequestDispatcher("/index.jsp").forward(request,response);
     }
 }

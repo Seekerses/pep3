@@ -7,13 +7,13 @@ public class HitCheckerImpl implements HitChecker{
     @Override
     public boolean checkHit(double x, double y, double r) {
 
-        if ((x >=0 && y >= 0) && (y <=  -x + r )){
+        if ((x >=0 && y >= 0) && (Math.pow(x,2) + Math.pow(y,2) <= Math.pow(r,2))){
             return true;
         }
-        if ((x <= 0 && y <= 0) && (Math.pow(x,2) + Math.pow(y,2) <= Math.pow(r,2))) {
+        if ((x <= 0 && y >= 0) && (x >= -r && y <= r/2)) {
             return true;
         }
-        if ((x >= 0 && y <=0) && (x <= r && y >= -r)) {
+        if ((x >= 0 && y <=0) && (y >= x - r/2)) {
             return true;
         }
         return false;

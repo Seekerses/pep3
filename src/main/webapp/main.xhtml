@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: seeke
+  Date: 08.12.2020
+  Time: 2:53
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Popov D.M. Group P3213</title>
+    <h:outputStylesheet library="css" name="style.css"/>
+    <h:outputScript library="js" name="script.js"/>
+
+</h:head>
+
+<h:body>
+    <ui:include src="header.xhtml"/>
+    <div class="graph-container"></div>
+    <h:link id="index-href" outcome="index"  value="To the index page"/>
+    <h:form class="dot-form" id="makeDotForm" onsubmit="return false">
+        <div id="x-value">
+        <h:commandButton type="button" value="-5" action="#{addView.setxCoordinate(-5)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="-4" action="#{addView.setxCoordinate(-4)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="-3"  action="#{addView.setxCoordinate(-3)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="-2"  action="#{addView.setxCoordinate(-2)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="-1"  action="#{addView.setxCoordinate(-1)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="0"  action="#{addView.setxCoordinate(0)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="1"  action="#{addView.setxCoordinate(1)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="2"  action="#{addView.setxCoordinate(2)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+        <h:commandButton type="button" value="3"  action="#{addView.setxCoordinate(3)}">
+            <f:ajax event="action" render="x-span"/>
+        </h:commandButton>
+            <h:outputText id="x-span" value="#{addView.xCoordinate}"/>
+        </div>
+        <br/>
+<div id="y-value">
+        <h:inputText converter="javax.faces.Double" id="y-coordinate" value="#{addView.yCoordinate}" validatorMessage="String is not valid (only double numbers) between -5 and 3">
+            <f:validateDoubleRange minimum="-5" maximum="3" />
+            <f:ajax event="change" render="y-span"/>
+        </h:inputText>
+        <h:outputText id="y-span" value="#{addView.yCoordinate}"/>
+</div>
+        <br/>
+
+        <div id="r-value">
+        <h:commandLink value="1" onclick="setR(1); redrawCanvas()" action="#{addView.setrValue(1)}" >
+            <f:ajax event="action" render="r-span"/>
+        </h:commandLink>
+        <h:commandLink value="1.5" onclick="setR(1.5); redrawCanvas()" action="#{addView.setrValue(1.5)}">
+            <f:ajax event="action" render="r-span"/>
+        </h:commandLink>
+        <h:commandLink value="2" onclick="setR(2); redrawCanvas()" action="#{addView.setrValue(2)}">
+            <f:ajax event="action" render="r-span"/>
+        </h:commandLink>
+        <h:commandLink value="2.5" onclick="setR(2.5); redrawCanvas()" action="#{addView.setrValue(2.5)}">
+            <f:ajax event="action" render="r-span"/>
+        </h:commandLink>
+        <h:commandLink value="3" onclick="setR(3); redrawCanvas()" action="#{addView.setrValue(3)}">
+            <f:ajax event="action" render="r-span"/>
+        </h:commandLink>
+            <h:outputText id="r-span" value="#{addView.rValue}"/>
+        </div>
+
+        <h:commandButton value="Submit" id="add-visible" type="button" onclick="validate()">
+        </h:commandButton>
+
+        <h:commandButton style="display: none" id="add-button" value="Submit" type="button" action="#{addView.makeHit}">
+            <f:ajax event="action" render="contentTable"/>
+        </h:commandButton>
+
+        <h:commandButton value="Clear" id="clear-button" type="button" action="#{tableView.clearTable}">
+            <f:ajax event="action" render="contentTable"/>
+        </h:commandButton>
+    </h:form>
+
+    <h:dataTable var="hit" value="#{tableView.hitList}" id="contentTable">
+        <h:column>
+            <f:facet name="header">X coordinate</f:facet>
+            #{hit.XCoordinate}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Y coordinate</f:facet>
+            #{hit.YCoordinate}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">R value</f:facet>
+            #{hit.RValue}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Hit</f:facet>
+            #{hit.inArea ? "Hit" : "Miss"}
+        </h:column>
+    </h:dataTable>
+
+    <h:form id="hidden-form" style="display: none">
+        <h:inputText converter="javax.faces.Double" value="#{addView.xHidden}" id="hidden-x">
+            <f:ajax oneerror="alert('a')" event="change"/>
+        </h:inputText>
+        <h:inputText converter="javax.faces.Double" value="#{addView.yHidden}" id="hidden-y">
+            <f:ajax oneerror="alert('a')" event="change"/>
+        </h:inputText>
+        <h:commandButton style="display: none" value="" id="hidden-hit" type="button" action="#{addView.makeHiddenHit()}">
+            <f:ajax oneerror="alert('a')" event="action" render="contentTable"/>
+        </h:commandButton>
+    </h:form>
+</h:body>
+
+</html>

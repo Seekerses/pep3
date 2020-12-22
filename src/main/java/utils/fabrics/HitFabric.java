@@ -1,7 +1,7 @@
 package utils.fabrics;
 
 import exceptions.InvalidParameterValue;
-import model.entites.Hit;
+import model.entities.Hit;
 
 public interface HitFabric {
 

@@ -1,11 +1,24 @@
-package model.entites;
+package model.entities;
 
-public class Hit {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
+
+@Entity
+public class Hit implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private double xCoordinate;
     private double yCoordinate;
     private double rValue;
     private boolean isInArea;
+
+    public Hit(){}
 
     public Hit(double xCoordinate, double yCoordinate, double rValue, boolean isInArea) {
         this.xCoordinate = xCoordinate;
@@ -52,5 +65,9 @@ public class Hit {
                 "," + yCoordinate +
                 "," + rValue +
                 "," + isInArea;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

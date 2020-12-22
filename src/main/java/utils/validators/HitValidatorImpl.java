@@ -3,7 +3,6 @@ package utils.validators;
 import exceptions.InvalidParameterValue;
 
 import javax.ejb.Stateless;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,11 +10,11 @@ import java.util.List;
 public class HitValidatorImpl implements HitValidator {
 
     private final List<Double> rValues;
-    private final List<Double> yValues;
+    private final List<Double> xValues;
 
     public HitValidatorImpl() {
-        rValues = (List<Double>) Arrays.asList(1D, 2D, 3D, 4D, 5D);
-        yValues = (List<Double>) Arrays.asList(-5D, -4D, -3D, -2D, -1D, 0D, 1D, 2D, 3D);
+        rValues = (List<Double>) Arrays.asList(1D, 1.5D, 2D, 2.5D, 3D);
+        xValues = (List<Double>) Arrays.asList(-5D, -4D, -3D, -2D, -1D, 0D, 1D, 2D, 3D);
     }
 
     @Override
@@ -40,7 +39,7 @@ public class HitValidatorImpl implements HitValidator {
     private void checkX(Double x) throws InvalidParameterValue {
 
         if (x == null) throw new InvalidParameterValue();
-        if (x < -5 || x > 3) throw new InvalidParameterValue();
+        if (x < -5D || x > 3D) throw new InvalidParameterValue();
     }
 
 

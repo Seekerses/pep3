@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+body {
+    background: rgb(131,58,180);
+    background: linear-gradient(180deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 100%, rgba(252,176,69,1) 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    backdrop-filter: blur(3px);
+    color: antiquewhite;
+    height: 100vh;
+    width: 100vw;
+}
+
+.studInfo {
+    margin: auto;
+    padding-top: 1%;
+    width: 75%;
+    color: antiquewhite;
+    text-align: center;
+    font-family: 'Anton', sans-serif;
+    font-style: italic;
+    font-size: larger;
+}
+
+.studInfo td{
+    width: 25%;
+    text-align: center;
+    border: rgba(200,200,200,1) 1px solid;
+    transition: 0.2s;
+}
+
+.studInfo td:hover {
+    width: 27%;
+    transition: 0.2s;
+    border: azure 1px solid;
+    animation: normal jumping 1s;
+}
+
+.studInfo td:first-letter {
+    color: gold;
+}
+
+@keyframes jumping {
+    0% {
+        padding-left: 10px;
+    }
+    10%{
+        padding-left: 50px;
+    }
+    20% {
+        padding-right: 30px;
+    }
+    40% {
+        padding-left: 20px;
+    }
+    60% {
+        padding-right: 5px;
+    }
+    80% {
+        padding-left: 4px;
+    }
+    100% {
+        padding: 0;
+    }
+}
+
+@keyframes bouncing {
+    0% {
+        transform: scale(0.9,0.9);
+    }
+    10% {
+        transform: scale(1.15,1.15);
+    }
+    20% {
+        transform: scale(1,1);
+    }
+    30% {
+        transform: scale(1.07,1.07);
+    }
+    40% {
+        transform: scale(1,1);
+    }
+    50% {
+        transform: scale(1.03,1.03);
+    }
+    100% {
+        transform: scale(1,1);
+    }
+}
+
+
+table {
+    width: 100%;
+    text-align: center;
+}
+
+.graph-container {
+    width: 400px;
+    height: 400px;
+    margin: 5vh auto;
+}
+
+#graph {
+    border: aliceblue 1px solid;
+}
+
+table#contentTable td{
+    transition: 0.2s;
+    border: rgba(200,200,200,1) 1px solid;
+    text-align: left;
+    font-weight: bold;
+    font-size: larger;
+    vertical-align: top;
+}
+
+table#contentTable td:hover{
+    transform: scale(1.02,1.05);
+    transition: 0.1s;
+    border: azure 1px solid;
+}
+
+table#contentTable th{
+    transition: 0.2s;
+    border: rgba(200,200,200,1) 1px solid;
+    text-align: left;
+    font-weight: bold;
+    font-size: larger;
+    vertical-align: top;
+}
+
+table#contentTable th:hover{
+    transform: scale(1.02,1.05);
+    transition: 0.1s;
+    border: azure 1px solid;
+}
+
+.Error {
+    color: red;
+    font-size: smaller;
+}
+
+#x-value {
+    justify-content: center;
+}
+
+form {
+    margin-left: 1%;
+    margin-bottom: 10px;
+}
+
+#r-value input {
+    margin-right: 1%;
+}
+
+#index-href {
+    float: right;
+    margin-right: 30px;
+}
+
+#r-value {
+    margin-bottom: 10px;
+}
+form {
+    border: 1px aliceblue solid;
+    border-radius: 5%;
+    width: 270px;
+    padding: 15px;
+}
+
+a {
+    margin-right: 1%;
+    border-radius: 5%;
+    background: rgb(29,213,224);
+    background: linear-gradient(180deg, rgba(29,213,224,1) 0%, rgba(122,236,72,1) 50%, rgba(84,193,250,1) 100%);
+    box-shadow: 0 5px 0 rgb(0,150,160);
+    color: rgb(0,150,160);
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+a:hover {
+    background-color: rgb(10,190,200);
+    cursor: pointer;
+}
+
+a:active {
+    box-shadow: none;
+    top: 5px;
+}
+
